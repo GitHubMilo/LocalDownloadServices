@@ -78,3 +78,51 @@ services:
   restart: unless-stopped
   ports:
    - 8191:8191
+
+ prowlarr:
+  image: lscr.io/linuxserver/prowlarr:latest
+  container_name: prowlarr
+  environment:
+   - PUID=${PUID}
+   - PGID=${PGID}
+   - TZ=${TZ}
+  volumes:
+   - ./config/prowlarr:/config
+  restart: unless-stopped
+  ports:
+   - 9696:9696
+
+ cross-seed:
+  image: crossseed/cross-seed:latest
+  container_name: cross-seed
+  user: ${PUID}:${PGID}
+  volumes:
+   - ./config/cross-seed:/config
+   - ./config/qBittorrent/data/BT_backup:/torrents
+   - ./downloads:/downloads
+  command: daemon
+  restart: unless-stopped
+
+ qbittorrent:
+  image: qbittorrentofficial/qbittorrent-nox:latest
+  container_name: qbittorrent-nox
+  environment:
+   - PUID=${PUID}
+   - PGID=${PGID}
+   - TZ=${TZ}
+   - QBT_WEBUI_PORT=8080
+  stop_grace_period: 30m
+  tmpfs:
+   - /tmp
+  volumes:
+   - ./config:/config
+   - ./downloads:/downloads
+  restart: unless-stopped
+
+ qbittools:
+  image: registry.gitlab.com/alexkm/qbittools
+  container_name: qbittools
+  volumes:
+  - ./config/qBittorrent/config:/qBittorrent
+  command: reannounce -C /qBittorrent/qBittorrent.conf
+  restart: unless-stopped
