@@ -127,6 +127,6 @@ services:
   image: registry.gitlab.com/alexkm/qbittools
   container_name: qbittools
   volumes:
-  - ./config/qBittorrent/config:/qBittorrent
+   - ./config/qBittorrent/config:/qBittorrent
   command: reannounce -C /qBittorrent/qBittorrent.conf
   restart: unless-stopped
