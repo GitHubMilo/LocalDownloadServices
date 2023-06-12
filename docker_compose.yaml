@@ -117,6 +117,10 @@ services:
   volumes:
    - ./config:/config
    - ./downloads:/downloads
+  ports:
+   - ${QBT_WEBUI_PORT}:${QBT_WEBUI_PORT}
+   - ${PORT_FORWARD_PORT}:6881/tcp
+   - ${PORT_FORWARD_PORT}:6881/udp
   restart: unless-stopped
 
  qbittools:
